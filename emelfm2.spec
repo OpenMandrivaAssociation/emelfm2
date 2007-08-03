@@ -1,29 +1,19 @@
 %define name    emelfm2
-%define version 0.3.2
+%define version 0.3.5
 %define release %mkrel 1
-
-#this is to allow easy relocation eg to /usr/local
-%define prefix /usr
-%define _bindir %{prefix}/bin
-%define _libdir %{prefix}/lib
 
 Name:      %{name}
 Version:   %{version}
 Release:   %{release}
-Summary:   Gtk+2 file manager with two-panel format
+Summary:   GTK+ 2 file manager with two-panel format
 Group:     File tools
-License:   GPL
-#URL:      http://emelfm2.org
+License:   GPLv3+ and LGPLv3+
 URL:       http://emelfm2.net
-Source:    %{name}-%{version}.tar.bz2
+Source:    http://emelfm2.net/rel/%{name}-%{version}.tar.gz
 Patch0:    emelfm2_change_config.diff
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
-Requires:        gtk+2.0 >= 2.4 file findutils >= 4.2 grep sed
-Requires:        libgamin-1_0 >= 0.1
-BuildRequires:   gtk+2-devel
-BuildRequires:   gcc >= 3.2
-BuildRequires:   gamin-devel >= 0.1
-BuildRequires:   desktop-file-utils
+BuildRequires:	gtk+2-devel
+BuildRequires:	desktop-file-utils
 
 %description
 emelFM2 is a file manager with the efficient two-panel format,
@@ -38,7 +28,7 @@ featuring:
   o Configurable toolbars
   o Runtime loadable plugins
 
-It is the Gtk+2 port of emelFM. 
+It is the GTK+ 2 port of emelFM. 
 
 Note: EmelFM2 and EmelFM are parallel installable
 
@@ -57,77 +47,60 @@ to allow emelFM2 to use non-english names in its user-interface
 
 %build
 
-%ifarch x86_64
-%make PREFIX=%{prefix} DOCS_VERSION=1 USE_GAMIN=1 CFLAGS="-O2"
-%else
-%make PREFIX=%{prefix} DOCS_VERSION=1 USE_GAMIN=1 CFLAGS="-O2 -march=i586"
-%endif
-
+%make OPTIMIZE="${RPM_OPT_FLAGS}" \
+    CFLAGS="${RPM_OPT_FLAGS}" \
+    USE_INOTIFY=1 \
+    USE_LATEST=1 \
+    PREFIX="%{_prefix}" 
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%make install PREFIX=%{buildroot}%{prefix}
+make install PREFIX=%{buildroot}%{_prefix}
+make install_i18n PREFIX=%{buildroot}%{_prefix}
 
-mkdir -p %{buildroot}%{_bindir}
-install -m 755 %{name} %{buildroot}%{_bindir}
-
-%make install_i18n PREFIX=%{buildroot}%{prefix}
+#mkdir -p %{buildroot}%{_bindir}
+#install -m 755 %{name} %{buildroot}%{_bindir}
 
 # remove unnecessary
-rm -rf %{buildroot}/%{_datadir}/doc/emelfm2
+rm -rf %{buildroot}/%{_docdir}/*
 
-%find_lang %{name}
+# icons
+install -m 644 -D icons/emelfm2_48.png %{buildroot}%{_iconsdir}/hicolor/48x48/apps/%{name}.png
+install -m 644 -D icons/emelfm2_32.png %{buildroot}%{_iconsdir}/hicolor/32x32/apps/%{name}.png
+install -m 644 -D icons/emelfm2_24.png %{buildroot}%{_iconsdir}/hicolor/24x24/apps/%{name}.png
 
 # menu
-mkdir -p %{buildroot}{%{_miconsdir},%{_iconsdir},%{_liconsdir},%{_menudir}}
-install -m 644 icons/emelfm2_48.png %{buildroot}%{_liconsdir}/%{name}.png
-install -m 644 icons/emelfm2_32.png %{buildroot}%{_iconsdir}/%{name}.png
-install -m 644 icons/emelfm2_24.png %{buildroot}%{_miconsdir}/%{name}.png
-
-cat > %{buildroot}%{_menudir}/%{name} << EOF
-?package(%{name}):\
-command="%{name}"\
-title="Emelfm2"\
-longtitle="Gtk+2 file manager"\
-needs="x11"\
-icon="%{name}.png"\
-section="System/File Tools" \
-xdg="true"
-EOF
-
+perl -pi -e 's,Icon=emelfm2/emelfm2_48.png,Icon=%{name},g' %{buildroot}%{_datadir}/applications/*
 desktop-file-install --vendor="" \
---add-category="X-MandrivaLinux-System-FileTools" \
---dir $RPM_BUILD_ROOT%{_datadir}/applications $RPM_BUILD_ROOT%{_datadir}/applications/* 
+  --add-category="System" \
+  --add-category="Utility" \
+  --dir %{buildroot}%{_datadir}/applications %{buildroot}%{_datadir}/applications/*
 
 %find_lang %{name}
 
 %post
 %{update_menus}
+%{update_icon_cache hicolor}
 
 %postun
 %{clean_menus}
+%{clean_icon_cache hicolor}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc docs/ACTIONS docs/CONFIGURATION docs/CREDITS
-%doc docs/GPL docs/HACKING docs/INSTALL docs/README docs/TODO docs/USAGE
+%doc docs/HACKING docs/README docs/TODO docs/USAGE
 %doc docs/WARNING
 %defattr (-,root,root)
 %{_bindir}/*
-%{prefix}/share/pixmaps/*
-%{prefix}/share/applications/*
-%{prefix}/share/application-registry/*
-%dir %_libdir/%{name}
-%dir %_libdir/%{name}/plugins
-%{_libdir}/%{name}/plugins/e2p*.so
-%{_menudir}/%{name}
-%{_miconsdir}/%{name}.png
-%{_iconsdir}/%{name}.png
-%{_liconsdir}/%{name}.png
+%{_datadir}/pixmaps/*
+%{_datadir}/applications/*
+%{_datadir}/application-registry/*
+%{_prefix}/lib/%{name}
+%{_iconsdir}/hicolor/48x48/apps/%{name}.png
+%{_iconsdir}/hicolor/32x32/apps/%{name}.png
+%{_iconsdir}/hicolor/24x24/apps/%{name}.png
 %{_mandir}/man1/* 
-
-
