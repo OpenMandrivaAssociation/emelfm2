@@ -11,7 +11,6 @@ License:   GPLv3+ and LGPLv3+
 URL:       http://emelfm2.net
 Source:    http://emelfm2.net/rel/%{name}-%{version}.tar.gz
 Patch0:    emelfm2_change_config.diff
-BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildRequires:	gtk+2-devel
 BuildRequires:	desktop-file-utils
 
