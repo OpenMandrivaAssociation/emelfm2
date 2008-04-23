@@ -1,6 +1,6 @@
 %define name    emelfm2
 %define version 0.3.5
-%define release %mkrel 1
+%define release %mkrel 2
 
 Name:      %{name}
 Version:   %{version}
@@ -14,6 +14,7 @@ Patch0:    emelfm2_change_config.diff
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildRequires:	gtk+2-devel
 BuildRequires:	desktop-file-utils
+Obsoletes:	%{name}-i18n
 
 %description
 emelFM2 is a file manager with the efficient two-panel format,
