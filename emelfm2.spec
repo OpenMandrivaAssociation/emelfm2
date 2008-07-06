@@ -1,5 +1,5 @@
 %define name    emelfm2
-%define version 0.4
+%define version 0.4.1
 %define release %mkrel 1
 
 Name:      %{name}
@@ -32,15 +32,6 @@ featuring:
 It is the GTK+ 2 port of emelFM. 
 
 Note: EmelFM2 and EmelFM are parallel installable
-
-%package   i18n
-Summary:   Translation files for emelFM2
-Group:     File tools
-Requires:  %{name} = %{version}
-
-%description i18n
-This package contains a translation files which may be installed
-to allow emelFM2 to use non-english names in its user-interface
 
 %prep
 %setup -q
