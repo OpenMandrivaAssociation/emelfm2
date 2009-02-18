@@ -1,5 +1,5 @@
 %define name    emelfm2
-%define version 0.4.1
+%define version 0.5.0
 %define release %mkrel 1
 
 Name:      %{name}
@@ -9,8 +9,7 @@ Summary:   GTK+ 2 file manager with two-panel format
 Group:     File tools
 License:   GPLv3+ and LGPLv3+
 URL:       http://emelfm2.net
-Source:    http://emelfm2.net/rel/%{name}-%{version}.tar.gz
-Patch0:    emelfm2_change_config.diff
+Source:    http://emelfm2.net/rel/%{name}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildRequires:	gtk+2-devel
 BuildRequires:	desktop-file-utils
@@ -20,22 +19,21 @@ Obsoletes:	%{name}-i18n
 emelFM2 is a file manager with the efficient two-panel format,
 featuring:
   o Simple interface
-  o Bookmarks and history lists 
+  o Bookmarks and history lists
   o Flexible filetyping scheme
-  o Multiple actions selectable for each filetype 
+  o Multiple actions selectable for each filetype
   o Filename, size, and date Filters
   o Built-in command line
   o Configurable keyboard bindings
   o Configurable toolbars
   o Runtime loadable plugins
 
-It is the GTK+ 2 port of emelFM. 
+It is the GTK+ 2 port of emelFM.
 
 Note: EmelFM2 and EmelFM are parallel installable
 
 %prep
-%setup -q
-%patch0 -p0
+%setup -q -n %{name}-0.5
 
 %build
 
@@ -43,7 +41,7 @@ Note: EmelFM2 and EmelFM are parallel installable
     CFLAGS="${RPM_OPT_FLAGS}" \
     USE_INOTIFY=1 \
     USE_LATEST=1 \
-    PREFIX="%{_prefix}" 
+    PREFIX="%{_prefix}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -99,4 +97,4 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/hicolor/48x48/apps/%{name}.png
 %{_iconsdir}/hicolor/32x32/apps/%{name}.png
 %{_iconsdir}/hicolor/24x24/apps/%{name}.png
-%{_mandir}/man1/* 
+%{_mandir}/man1/*
