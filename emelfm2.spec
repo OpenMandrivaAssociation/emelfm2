@@ -1,6 +1,6 @@
 %define name    emelfm2
-%define version 0.5.0
-%define release %mkrel 1
+%define version 0.5.1
+%define release %mkrel 2
 
 Name:      %{name}
 Version:   %{version}
@@ -13,6 +13,9 @@ Source:    http://emelfm2.net/rel/%{name}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildRequires:	gtk+2-devel
 BuildRequires:	desktop-file-utils
+BuildRequires:  hal-devel
+BuildRequires:  gimp-devel
+BuildRequires:  gtkspell-devel
 Obsoletes:	%{name}-i18n
 
 %description
@@ -33,15 +36,20 @@ It is the GTK+ 2 port of emelFM.
 Note: EmelFM2 and EmelFM are parallel installable
 
 %prep
-%setup -q -n %{name}-0.5
+%setup -q -n %{name}-%{version}
 
 %build
-
 %make OPTIMIZE="${RPM_OPT_FLAGS}" \
-    CFLAGS="${RPM_OPT_FLAGS}" \
-    USE_INOTIFY=1 \
-    USE_LATEST=1 \
-    PREFIX="%{_prefix}"
+        CFLAGS="${RPM_OPT_FLAGS}" \
+        USE_INOTIFY=1 \
+        USE_LATEST=1 \
+        PREFIX="%{_prefix}" \
+        WITH_THUMBS=1 \
+        WITH_TRACKER=1 \
+        WITH_CUSTOMMOUSE=1 \
+        WITH_HAL=1 \
+        EDITOR_SPELLCHECK=0 \
+        PREFIX="%{_prefix}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
