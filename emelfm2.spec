@@ -16,6 +16,7 @@ BuildRequires:	desktop-file-utils
 BuildRequires:  hal-devel
 BuildRequires:  gimp-devel
 BuildRequires:  gtkspell-devel
+BuildRequires:  dbus-glib-devel
 Obsoletes:	%{name}-i18n
 
 %description
