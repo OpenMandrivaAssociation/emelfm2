@@ -17,6 +17,7 @@ BuildRequires:  hal-devel
 BuildRequires:  gimp-devel
 BuildRequires:  gtkspell-devel
 BuildRequires:  dbus-glib-devel
+BuildRequires:	magic-devel
 Obsoletes:	%{name}-i18n
 
 %description
