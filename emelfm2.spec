@@ -1,5 +1,5 @@
 %define name    emelfm2
-%define version 0.6.2
+%define version 0.7.1
 %define release %mkrel 1
 
 Name:      %{name}
@@ -10,6 +10,7 @@ Group:     File tools
 License:   GPLv3+ and LGPLv3+
 URL:       http://emelfm2.net
 Source:    http://emelfm2.net/rel/%{name}-%{version}.tar.bz2
+Patch0:    emelfm2-0.7.1-str-fmt.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildRequires:	gtk+2-devel
 BuildRequires:	desktop-file-utils
@@ -39,6 +40,7 @@ Note: EmelFM2 and EmelFM are parallel installable
 
 %prep
 %setup -q -n %{name}-%{version}
+%patch0 -p1 -b .str-fmt
 
 %build
 %make OPTIMIZE="${RPM_OPT_FLAGS}" \
