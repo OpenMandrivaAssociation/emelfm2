@@ -1,5 +1,5 @@
 %define name    emelfm2
-%define version 0.7.1
+%define version 0.7.3
 %define release %mkrel 1
 
 Name:      %{name}
