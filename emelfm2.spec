@@ -1,6 +1,6 @@
 %define name    emelfm2
-%define version 0.7.3
-%define release %mkrel 1
+%define version 0.8.1
+%define release %mkrel 2
 
 Name:      %{name}
 Version:   %{version}
@@ -9,16 +9,13 @@ Summary:   GTK+ 2 file manager with two-panel format
 Group:     File tools
 License:   GPLv3+ and LGPLv3+
 URL:       http://emelfm2.net
-Source:    http://emelfm2.net/rel/%{name}-%{version}.tar.bz2
-Patch0:    emelfm2-0.7.1-str-fmt.patch
-BuildRoot: %{_tmppath}/%{name}-%{version}-root
-BuildRequires:	gtk+2-devel
+Source0:   http://emelfm2.net/rel/%{name}-%{version}.tar.bz2
+BuildRequires:	gtk+3-devel
+BuildRequires:	polkit-1-devel
 BuildRequires:	desktop-file-utils
-BuildRequires:  hal-devel
-BuildRequires:  gimp-devel
-BuildRequires:  gtkspell-devel
-BuildRequires:  dbus-glib-devel
 BuildRequires:	magic-devel
+BuildRequires:	acl-devel
+BuildRequires:	pkgconfig(udev)
 Obsoletes:	%{name}-i18n
 
 %description
@@ -40,23 +37,27 @@ Note: EmelFM2 and EmelFM are parallel installable
 
 %prep
 %setup -q -n %{name}-%{version}
-%patch0 -p1 -b .str-fmt
 
 %build
+sed -i Makefile -e 's:dbus-glib-1::' || die
+
 %make OPTIMIZE="${RPM_OPT_FLAGS}" \
         CFLAGS="${RPM_OPT_FLAGS}" \
         USE_INOTIFY=1 \
+	GTK3=1	\
+	WITH_POLKIT=1 \
+	WITH_DEVKIT=1 \
+	WITH_ACL=1	\
         USE_LATEST=1 \
         PREFIX="%{_prefix}" \
         WITH_THUMBS=1 \
         WITH_TRACKER=1 \
         WITH_CUSTOMMOUSE=1 \
-        WITH_HAL=1 \
+        WITH_HAL=0 \
         EDITOR_SPELLCHECK=0 \
         PREFIX="%{_prefix}"
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install PREFIX=%{buildroot}%{_prefix}
 make install_i18n PREFIX=%{buildroot}%{_prefix}
 
@@ -79,21 +80,6 @@ desktop-file-install --vendor="" \
   --dir %{buildroot}%{_datadir}/applications %{buildroot}%{_datadir}/applications/*
 
 %find_lang %{name}
-
-%if %mdkversion < 200900
-%post
-%{update_menus}
-%{update_icon_cache hicolor}
-%endif
-
-%if %mdkversion < 200900
-%postun
-%{clean_menus}
-%{clean_icon_cache hicolor}
-%endif
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
