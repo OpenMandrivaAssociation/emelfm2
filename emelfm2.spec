@@ -8,7 +8,7 @@ Release:   %{release}
 Summary:   GTK+ 2 file manager with two-panel format
 Group:     File tools
 License:   GPLv3+ and LGPLv3+
-URL:       http://emelfm2.net
+URL:       https://emelfm2.net
 Source0:   http://emelfm2.net/rel/%{name}-%{version}.tar.bz2
 BuildRequires:	gtk+3-devel
 BuildRequires:	polkit-1-devel
