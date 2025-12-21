@@ -10,6 +10,7 @@ Group:     File tools
 License:   GPLv3+ and LGPLv3+
 URL:       https://emelfm2.net
 Source0:   http://emelfm2.net/rel/%{name}-%{version}.tar.bz2
+BuildRequires:	make
 BuildRequires:	gtk+3-devel
 BuildRequires:	polkit-1-devel
 BuildRequires:	desktop-file-utils
